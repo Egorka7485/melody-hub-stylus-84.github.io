@@ -17,14 +17,6 @@ export function WaveSection({ onPlay }: WaveSectionProps) {
         >
           <Play className="h-8 w-8" />
         </Button>
-        <div className="mt-6 flex items-center gap-2">
-          <span className="px-4 py-2 rounded-full bg-black/20 text-sm">
-            Casino
-          </span>
-          <button className="text-white/80 hover:text-white">
-            ✕
-          </button>
-        </div>
       </div>
     </div>
   );
