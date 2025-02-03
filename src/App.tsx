@@ -12,6 +12,22 @@ import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
 
+// Определяем темную тему по умолчанию
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.classList.add('dark');
+} else {
+  document.documentElement.classList.remove('dark');
+}
+
+// Слушаем изменения системной темы
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  if (e.matches) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+});
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>

@@ -25,6 +25,28 @@
     --ring: 240 5.9% 10%;
     --radius: 0.75rem;
   }
+
+  .dark {
+    --background: 270 50% 5%;
+    --foreground: 0 0% 98%;
+    --card: 270 50% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 270 50% 5%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 270 75% 60%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 270 30% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 270 30% 15%;
+    --muted-foreground: 270 5% 64.9%;
+    --accent: 270 50% 25%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 270 30% 15%;
+    --input: 270 30% 15%;
+    --ring: 270 75% 60%;
+  }
  
   * {
     @apply border-border;
@@ -35,7 +57,7 @@
   }
 
   .glass-morphism {
-    @apply bg-white/30 backdrop-blur-md border border-white/20;
+    @apply bg-white/10 backdrop-blur-md border border-white/20 dark:bg-purple-900/10 dark:border-purple-500/20;
   }
 
   .hover-scale {
