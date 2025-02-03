@@ -104,7 +104,6 @@ export default function Index() {
           <a href="#" className="text-gray-600 hover:text-yellow-500">НАСТРОЕНИЯ И ЖАНРЫ</a>
           <a href="#" className="text-gray-600 hover:text-yellow-500">НОВЫЕ РЕЛИЗЫ</a>
           <a href="#" className="text-gray-600 hover:text-yellow-500">ЧАРТ</a>
-          <a href="#" className="text-gray-600 hover:text-yellow-500">ПОДБОРКИ</a>
         </nav>
 
         {/* Wave Section */}
