@@ -55,7 +55,7 @@ export default function Index() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-8">
-              <h1 className="text-2xl font-bold text-yellow-500">Melody Hub</h1>
+              <h1 className="text-2xl font-extrabold text-yellow-500 [text-shadow:_2px_2px_2px_rgb(0_0_0_/_20%)] tracking-wider transform hover:scale-105 transition-transform duration-200" style={{ WebkitTextStroke: '1px rgba(0,0,0,0.1)' }}>Lifestyle</h1>
               <nav className="hidden md:flex space-x-6">
                 <a href="#" className="text-black hover:text-yellow-500">Главное</a>
                 <a href="#" className="text-black hover:text-yellow-500">Подкасты и книги</a>
