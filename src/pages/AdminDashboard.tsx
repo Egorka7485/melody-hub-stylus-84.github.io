@@ -57,8 +57,8 @@ export default function AdminDashboard() {
                 id="file-upload"
               />
               <label htmlFor="file-upload">
-                <Button variant="outline" className="hover-scale" as="span">
-                  Browse Files
+                <Button variant="outline" className="hover-scale" asChild>
+                  <span>Browse Files</span>
                 </Button>
               </label>
             </div>
