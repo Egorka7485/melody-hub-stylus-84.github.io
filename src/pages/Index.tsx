@@ -130,7 +130,7 @@ export default function Index() {
 
         {/* Tracks List */}
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-2xl font-bold mb-6">Все треки</h2>
+          <h2 className="text-2xl font-bold mb-6">Чарт</h2>
           <TrackList
             tracks={filteredTracks}
             onTrackSelect={(track) => setCurrentTrack(track)}
