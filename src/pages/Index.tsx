@@ -58,7 +58,7 @@ export default function Index() {
               <img 
                 src="/lovable-uploads/fa38c363-37a6-4b2d-9b3f-7365e9548f13.png" 
                 alt="Lifestyle Label" 
-                className="h-12 transform hover:scale-105 transition-all duration-300 hover:drop-shadow-lg animate-fade-in"
+                className="h-16 transform hover:scale-105 transition-all duration-300 hover:drop-shadow-lg animate-fade-in mix-blend-multiply"
               />
               <nav className="hidden md:flex space-x-6">
                 <a href="#" className="text-black hover:text-yellow-500">Главное</a>
