@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { WaveSection } from "../components/WaveSection";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 const mockTracks = [
   {
@@ -38,7 +39,6 @@ export default function Index() {
   const { isAuthenticated } = useAuth();
 
   const handleWavePlay = () => {
-    // You can implement the wave play functionality here
     console.log("Wave play clicked");
   };
 
@@ -49,7 +49,7 @@ export default function Index() {
   );
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4">
@@ -139,6 +139,7 @@ export default function Index() {
       </main>
 
       <MusicPlayer currentTrack={currentTrack} />
+      <ThemeToggle />
     </div>
   );
 }
