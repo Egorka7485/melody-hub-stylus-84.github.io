@@ -1,4 +1,3 @@
-import { Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface WaveSectionProps {
@@ -13,9 +12,13 @@ export function WaveSection({ onPlay }: WaveSectionProps) {
         <h2 className="text-4xl font-bold mb-8">Моя волна</h2>
         <Button 
           onClick={onPlay}
-          className="bg-black/20 hover:bg-black/30 text-white rounded-full p-8"
+          className="bg-black/20 hover:bg-black/30 text-white rounded-full p-8 hover:scale-105 transition-all duration-300"
         >
-          <Play className="h-8 w-8" />
+          <img 
+            src="/lovable-uploads/34fddc51-3552-4391-a256-7ef1a8cb5c37.png" 
+            alt="Play"
+            className="h-8 w-8 mix-blend-multiply invert"
+          />
         </Button>
       </div>
     </div>
