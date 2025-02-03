@@ -6,8 +6,8 @@ import { Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { WaveSection } from "../components/WaveSection";
 
-// Mock data for demonstration
 const mockTracks = [
   {
     id: "1",
@@ -36,6 +36,11 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+
+  const handleWavePlay = () => {
+    // You can implement the wave play functionality here
+    console.log("Wave play clicked");
+  };
 
   const filteredTracks = mockTracks.filter(
     (track) =>
@@ -101,6 +106,9 @@ export default function Index() {
           <a href="#" className="text-gray-600 hover:text-yellow-500">ЧАРТ</a>
           <a href="#" className="text-gray-600 hover:text-yellow-500">ПОДБОРКИ</a>
         </nav>
+
+        {/* Wave Section */}
+        <WaveSection onPlay={handleWavePlay} />
 
         {/* Featured Section */}
         <div className="mb-12">
