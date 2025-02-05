@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { ArrowLeft } from "lucide-react";
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("");
@@ -32,8 +33,16 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-yellow-50 to-yellow-100">
-      <div className="bg-white p-8 rounded-lg w-full max-w-md space-y-6 shadow-lg">
-        <div className="text-center">
+      <div className="bg-white p-8 rounded-lg w-full max-w-md space-y-6 shadow-lg relative">
+        <Button
+          variant="ghost"
+          className="absolute left-4 top-4 text-gray-600 hover:text-yellow-500"
+          onClick={() => navigate("/")}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          На главную
+        </Button>
+        <div className="text-center mt-8">
           <h1 className="text-2xl font-bold text-yellow-500">Melody Hub</h1>
           <p className="text-gray-600 mt-2">Войдите в свой аккаунт</p>
         </div>
