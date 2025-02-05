@@ -39,7 +39,7 @@ export default function Index() {
   const { isAuthenticated } = useAuth();
 
   const handleWavePlay = () => {
-    console.log("Wave play clicked");
+    setCurrentTrack(mockTracks[0]);
   };
 
   const filteredTracks = mockTracks.filter(
