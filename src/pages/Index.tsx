@@ -62,7 +62,6 @@ export default function Index() {
               />
               <nav className="hidden md:flex space-x-6">
                 <a href="#" className="text-foreground hover:text-yellow-500">Главное</a>
-                <a href="#" className="text-foreground hover:text-yellow-500">Детям</a>
                 <a href="#" className="text-foreground hover:text-yellow-500">Коллекция</a>
               </nav>
             </div>
