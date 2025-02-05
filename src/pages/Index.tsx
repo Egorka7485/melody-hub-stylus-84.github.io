@@ -58,13 +58,13 @@ export default function Index() {
               <img 
                 src="/lovable-uploads/fa38c363-37a6-4b2d-9b3f-7365e9548f13.png" 
                 alt="Lifestyle Label" 
-                className="h-16 transform hover:scale-105 transition-all duration-300 hover:drop-shadow-lg animate-fade-in mix-blend-multiply"
+                className="h-16 transform hover:scale-105 transition-all duration-300 hover:drop-shadow-lg animate-fade-in dark:invert dark:brightness-200 mix-blend-multiply dark:mix-blend-normal"
               />
               <nav className="hidden md:flex space-x-6">
-                <a href="#" className="text-black hover:text-yellow-500">Главное</a>
-                <a href="#" className="text-black hover:text-yellow-500">Подкасты и книги</a>
-                <a href="#" className="text-black hover:text-yellow-500">Детям</a>
-                <a href="#" className="text-black hover:text-yellow-500">Коллекция</a>
+                <a href="#" className="text-foreground hover:text-yellow-500">Главное</a>
+                <a href="#" className="text-foreground hover:text-yellow-500">Подкасты и книги</a>
+                <a href="#" className="text-foreground hover:text-yellow-500">Детям</a>
+                <a href="#" className="text-foreground hover:text-yellow-500">Коллекция</a>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
@@ -81,7 +81,7 @@ export default function Index() {
               {isAuthenticated ? (
                 <Button
                   variant="ghost"
-                  className="text-black hover:text-yellow-500"
+                  className="text-foreground hover:text-yellow-500"
                   onClick={() => navigate("/admin/dashboard")}
                 >
                   <User className="h-5 w-5" />
@@ -89,7 +89,7 @@ export default function Index() {
               ) : (
                 <Button
                   variant="ghost"
-                  className="text-black hover:text-yellow-500"
+                  className="text-foreground hover:text-yellow-500"
                   onClick={() => navigate("/admin")}
                 >
                   Войти
@@ -104,10 +104,10 @@ export default function Index() {
       <main className="container mx-auto px-4 py-8">
         {/* Categories */}
         <nav className="flex space-x-6 mb-8 border-b pb-4">
-          <a href="#" className="text-black font-medium hover:text-yellow-500 border-b-2 border-yellow-500 pb-4">ВСЕ</a>
-          <a href="#" className="text-gray-600 hover:text-yellow-500">НАСТРОЕНИЯ И ЖАНРЫ</a>
-          <a href="#" className="text-gray-600 hover:text-yellow-500">НОВЫЕ РЕЛИЗЫ</a>
-          <a href="#" className="text-gray-600 hover:text-yellow-500">ЧАРТ</a>
+          <a href="#" className="text-foreground font-medium hover:text-yellow-500 border-b-2 border-yellow-500 pb-4">ВСЕ</a>
+          <a href="#" className="text-muted-foreground hover:text-yellow-500">НАСТРОЕНИЯ И ЖАНРЫ</a>
+          <a href="#" className="text-muted-foreground hover:text-yellow-500">НОВЫЕ РЕЛИЗЫ</a>
+          <a href="#" className="text-muted-foreground hover:text-yellow-500">ЧАРТ</a>
         </nav>
 
         {/* Wave Section */}
@@ -129,8 +129,8 @@ export default function Index() {
         </div>
 
         {/* Tracks List */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-2xl font-bold mb-6">Чарт</h2>
+        <div className="bg-card rounded-lg shadow-sm p-6">
+          <h2 className="text-2xl font-bold mb-6 text-foreground">Чарт</h2>
           <TrackList
             tracks={filteredTracks}
             onTrackSelect={(track) => setCurrentTrack(track)}
