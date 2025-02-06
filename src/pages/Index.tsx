@@ -81,7 +81,7 @@ export default function Index() {
                 <Input
                   type="text"
                   placeholder="Поиск треков..."
-                  className="pl-10 bg-gray-50"
+                  className="pl-10 bg-background border-input text-foreground placeholder:text-muted-foreground"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
