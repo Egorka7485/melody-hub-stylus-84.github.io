@@ -43,7 +43,8 @@ export default function Index() {
   const [currentTrack, setCurrentTrack] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showChart, setShowChart] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("all"); // new state for tracking selected category
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showMainMenu, setShowMainMenu] = useState(true);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
@@ -122,6 +123,7 @@ export default function Index() {
               e.preventDefault();
               setSelectedCategory("all");
               setShowChart(false);
+              setShowMainMenu(true);
             }}
           >
             ВСЕ
@@ -137,6 +139,7 @@ export default function Index() {
               e.preventDefault();
               setSelectedCategory("moods");
               setShowChart(false);
+              setShowMainMenu(false);
             }}
           >
             НАСТРОЕНИЯ И ЖАНРЫ
@@ -152,6 +155,7 @@ export default function Index() {
               e.preventDefault();
               setSelectedCategory("new");
               setShowChart(false);
+              setShowMainMenu(false);
             }}
           >
             НОВЫЕ РЕЛИЗЫ
@@ -167,6 +171,7 @@ export default function Index() {
               e.preventDefault();
               setSelectedCategory("chart");
               setShowChart(true);
+              setShowMainMenu(false);
             }}
           >
             ЧАРТ
@@ -182,7 +187,7 @@ export default function Index() {
               onTrackSelect={(track) => setCurrentTrack(track)}
             />
           </div>
-        ) : (
+        ) : showMainMenu ? (
           <>
             {/* Wave Section */}
             <WaveSection onPlay={handleWavePlay} />
@@ -211,7 +216,7 @@ export default function Index() {
               />
             </div>
           </>
-        )}
+        ) : null}
       </main>
 
       <MusicPlayer currentTrack={currentTrack} />
