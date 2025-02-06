@@ -12,17 +12,24 @@ import { ThemeToggle } from "../components/ThemeToggle";
 const mockTracks = [
   {
     id: "1",
-    title: "Sample Track 1",
-    artist: "Artist 1",
+    title: "Бобр",
+    artist: "SLAVA SKRIPKA",
     url: "/path/to/audio1.mp3",
     coverUrl: "https://picsum.photos/200",
   },
   {
     id: "2",
-    title: "Sample Track 2",
-    artist: "Artist 2",
+    title: "Худи",
+    artist: "Джиган, Artik & Asti, NILETTO",
     url: "/path/to/audio2.mp3",
     coverUrl: "https://picsum.photos/201",
+  },
+  {
+    id: "3",
+    title: "Планы на завтра",
+    artist: "TIGO, Migrant",
+    url: "/path/to/audio3.mp3",
+    coverUrl: "https://picsum.photos/202",
   },
 ];
 
@@ -35,6 +42,7 @@ const categories = [
 export default function Index() {
   const [currentTrack, setCurrentTrack] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showChart, setShowChart] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
@@ -105,35 +113,57 @@ export default function Index() {
           <a href="#" className="text-foreground font-medium hover:text-yellow-500 border-b-2 border-yellow-500 pb-4">ВСЕ</a>
           <a href="#" className="text-muted-foreground hover:text-yellow-500">НАСТРОЕНИЯ И ЖАНРЫ</a>
           <a href="#" className="text-muted-foreground hover:text-yellow-500">НОВЫЕ РЕЛИЗЫ</a>
-          <a href="#" className="text-muted-foreground hover:text-yellow-500">ЧАРТ</a>
+          <a 
+            href="#" 
+            className="text-muted-foreground hover:text-yellow-500"
+            onClick={(e) => {
+              e.preventDefault();
+              setShowChart(true);
+            }}
+          >
+            ЧАРТ
+          </a>
         </nav>
 
-        {/* Wave Section */}
-        <WaveSection onPlay={handleWavePlay} />
-
-        {/* Featured Section */}
-        <div className="mb-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                className={`${category.color} rounded-lg p-6 text-white hover:scale-105 transition-transform cursor-pointer`}
-              >
-                <h3 className="text-xl font-bold mb-2">{category.title}</h3>
-                <p className="text-sm opacity-90">{category.description}</p>
-              </div>
-            ))}
+        {showChart ? (
+          <div className="bg-card rounded-lg shadow-sm p-6">
+            <h2 className="text-2xl font-bold mb-6 text-foreground">Чарт</h2>
+            <p className="text-muted-foreground mb-4">Треки, популярные на Яндекс Музыке прямо сейчас</p>
+            <TrackList
+              tracks={filteredTracks}
+              onTrackSelect={(track) => setCurrentTrack(track)}
+            />
           </div>
-        </div>
+        ) : (
+          <>
+            {/* Wave Section */}
+            <WaveSection onPlay={handleWavePlay} />
 
-        {/* Tracks List */}
-        <div className="bg-card rounded-lg shadow-sm p-6">
-          <h2 className="text-2xl font-bold mb-6 text-foreground">Чарт</h2>
-          <TrackList
-            tracks={filteredTracks}
-            onTrackSelect={(track) => setCurrentTrack(track)}
-          />
-        </div>
+            {/* Featured Section */}
+            <div className="mb-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {categories.map((category) => (
+                  <div
+                    key={category.id}
+                    className={`${category.color} rounded-lg p-6 text-white hover:scale-105 transition-transform cursor-pointer`}
+                  >
+                    <h3 className="text-xl font-bold mb-2">{category.title}</h3>
+                    <p className="text-sm opacity-90">{category.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tracks List */}
+            <div className="bg-card rounded-lg shadow-sm p-6">
+              <h2 className="text-2xl font-bold mb-6 text-foreground">Чарт</h2>
+              <TrackList
+                tracks={filteredTracks}
+                onTrackSelect={(track) => setCurrentTrack(track)}
+              />
+            </div>
+          </>
+        )}
       </main>
 
       <MusicPlayer currentTrack={currentTrack} />
