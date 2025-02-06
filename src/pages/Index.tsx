@@ -43,6 +43,7 @@ export default function Index() {
   const [currentTrack, setCurrentTrack] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showChart, setShowChart] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("all"); // new state for tracking selected category
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
@@ -110,14 +111,61 @@ export default function Index() {
       <main className="container mx-auto px-4 py-8">
         {/* Categories */}
         <nav className="flex space-x-6 mb-8 border-b pb-4">
-          <a href="#" className="text-foreground font-medium hover:text-yellow-500 border-b-2 border-yellow-500 pb-4">ВСЕ</a>
-          <a href="#" className="text-muted-foreground hover:text-yellow-500">НАСТРОЕНИЯ И ЖАНРЫ</a>
-          <a href="#" className="text-muted-foreground hover:text-yellow-500">НОВЫЕ РЕЛИЗЫ</a>
           <a 
             href="#" 
-            className="text-muted-foreground hover:text-yellow-500"
+            className={`${
+              selectedCategory === "all" 
+                ? "text-foreground font-medium border-b-2 border-yellow-500" 
+                : "text-muted-foreground"
+            } hover:text-yellow-500 pb-4`}
             onClick={(e) => {
               e.preventDefault();
+              setSelectedCategory("all");
+              setShowChart(false);
+            }}
+          >
+            ВСЕ
+          </a>
+          <a 
+            href="#" 
+            className={`${
+              selectedCategory === "moods" 
+                ? "text-foreground font-medium border-b-2 border-yellow-500" 
+                : "text-muted-foreground"
+            } hover:text-yellow-500 pb-4`}
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedCategory("moods");
+              setShowChart(false);
+            }}
+          >
+            НАСТРОЕНИЯ И ЖАНРЫ
+          </a>
+          <a 
+            href="#" 
+            className={`${
+              selectedCategory === "new" 
+                ? "text-foreground font-medium border-b-2 border-yellow-500" 
+                : "text-muted-foreground"
+            } hover:text-yellow-500 pb-4`}
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedCategory("new");
+              setShowChart(false);
+            }}
+          >
+            НОВЫЕ РЕЛИЗЫ
+          </a>
+          <a 
+            href="#" 
+            className={`${
+              selectedCategory === "chart" 
+                ? "text-foreground font-medium border-b-2 border-yellow-500" 
+                : "text-muted-foreground"
+            } hover:text-yellow-500 pb-4`}
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedCategory("chart");
               setShowChart(true);
             }}
           >
