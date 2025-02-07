@@ -8,30 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { WaveSection } from "../components/WaveSection";
 import { ThemeToggle } from "../components/ThemeToggle";
-
-const mockTracks = [
-  {
-    id: "1",
-    title: "Бобр",
-    artist: "SLAVA SKRIPKA",
-    url: "/path/to/audio1.mp3",
-    coverUrl: "https://picsum.photos/200",
-  },
-  {
-    id: "2",
-    title: "Худи",
-    artist: "Джиган, Artik & Asti, NILETTO",
-    url: "/path/to/audio2.mp3",
-    coverUrl: "https://picsum.photos/201",
-  },
-  {
-    id: "3",
-    title: "Планы на завтра",
-    artist: "TIGO, Migrant",
-    url: "/path/to/audio3.mp3",
-    coverUrl: "https://picsum.photos/202",
-  },
-];
+import { useTracks, useUpdatePlayCount } from "../hooks/useTracks";
+import { Track } from "../types/track";
+import { useToast } from "@/components/ui/use-toast";
 
 const categories = [
   { id: 1, title: "Премьера", description: "Открывает вам главные новинки", color: "bg-orange-400" },
@@ -40,19 +19,38 @@ const categories = [
 ];
 
 export default function Index() {
-  const [currentTrack, setCurrentTrack] = useState(null);
+  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showChart, setShowChart] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showMainMenu, setShowMainMenu] = useState(true);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { toast } = useToast();
+  
+  const { data: tracks = [], isLoading, error } = useTracks();
+  const updatePlayCount = useUpdatePlayCount();
 
-  const handleWavePlay = () => {
-    setCurrentTrack(mockTracks[0]);
+  const handleTrackSelect = async (track: Track) => {
+    setCurrentTrack(track);
+    try {
+      await updatePlayCount.mutateAsync(track.id);
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось обновить количество прослушиваний",
+        variant: "destructive",
+      });
+    }
   };
 
-  const filteredTracks = mockTracks.filter(
+  const handleWavePlay = () => {
+    if (tracks.length > 0) {
+      handleTrackSelect(tracks[0]);
+    }
+  };
+
+  const filteredTracks = tracks.filter(
     (track) =>
       track.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       track.artist.toLowerCase().includes(searchQuery.toLowerCase())
@@ -60,7 +58,6 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -108,9 +105,7 @@ export default function Index() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* Categories */}
         <nav className="flex space-x-6 mb-8 border-b pb-4">
           <a 
             href="#" 
@@ -181,18 +176,23 @@ export default function Index() {
         {showChart ? (
           <div className="bg-card rounded-lg shadow-sm p-6">
             <h2 className="text-2xl font-bold mb-6 text-foreground">Чарт</h2>
-            <p className="text-muted-foreground mb-4">Треки, популярные на Яндекс Музыке прямо сейчас</p>
-            <TrackList
-              tracks={filteredTracks}
-              onTrackSelect={(track) => setCurrentTrack(track)}
-            />
+            {isLoading ? (
+              <p className="text-muted-foreground">Загрузка треков...</p>
+            ) : error ? (
+              <p className="text-red-500">Ошибка при загрузке треков</p>
+            ) : (
+              <>
+                <p className="text-muted-foreground mb-4">Треки, популярные на нашей площадке прямо сейчас</p>
+                <TrackList
+                  tracks={filteredTracks}
+                  onTrackSelect={handleTrackSelect}
+                />
+              </>
+            )}
           </div>
         ) : showMainMenu ? (
           <>
-            {/* Wave Section */}
             <WaveSection onPlay={handleWavePlay} />
-
-            {/* Featured Section */}
             <div className="mb-12">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {categories.map((category) => (
@@ -207,13 +207,18 @@ export default function Index() {
               </div>
             </div>
 
-            {/* Tracks List */}
             <div className="bg-card rounded-lg shadow-sm p-6">
               <h2 className="text-2xl font-bold mb-6 text-foreground">Чарт</h2>
-              <TrackList
-                tracks={filteredTracks}
-                onTrackSelect={(track) => setCurrentTrack(track)}
-              />
+              {isLoading ? (
+                <p className="text-muted-foreground">Загрузка треков...</p>
+              ) : error ? (
+                <p className="text-red-500">Ошибка при загрузке треков</p>
+              ) : (
+                <TrackList
+                  tracks={filteredTracks}
+                  onTrackSelect={handleTrackSelect}
+                />
+              )}
             </div>
           </>
         ) : null}
