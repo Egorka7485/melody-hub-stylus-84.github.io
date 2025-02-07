@@ -1,13 +1,7 @@
+
 import { Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-interface Track {
-  id: string;
-  title: string;
-  artist: string;
-  url: string;
-  coverUrl: string;
-}
+import { Track } from "../types/track";
 
 interface TrackListProps {
   tracks: Track[];
@@ -24,7 +18,7 @@ export function TrackList({ tracks, onTrackSelect }: TrackListProps) {
         >
           <div className="relative">
             <img
-              src={track.coverUrl}
+              src={track.cover_url}
               alt={track.title}
               className="w-16 h-16 rounded-md object-cover"
             />

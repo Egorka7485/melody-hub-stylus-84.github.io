@@ -1,15 +1,9 @@
+
 import { useState, useRef } from "react";
 import { Play, Pause, SkipBack, SkipForward, Volume2 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-
-interface Track {
-  id: string;
-  title: string;
-  artist: string;
-  url: string;
-  coverUrl: string;
-}
+import { Track } from "../types/track";
 
 interface MusicPlayerProps {
   currentTrack: Track | null;
@@ -46,7 +40,7 @@ export function MusicPlayer({ currentTrack }: MusicPlayerProps) {
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center gap-4">
           <img
-            src={currentTrack.coverUrl}
+            src={currentTrack.cover_url}
             alt={currentTrack.title}
             className="w-12 h-12 rounded-md object-cover"
           />
