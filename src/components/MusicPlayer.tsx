@@ -5,17 +5,20 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Track } from "../types/track";
 import { Progress } from "@/components/ui/progress";
+import { useTracks } from "../hooks/useTracks";
 
 interface MusicPlayerProps {
   currentTrack: Track | null;
+  onTrackChange?: (track: Track) => void;
 }
 
-export function MusicPlayer({ currentTrack }: MusicPlayerProps) {
+export function MusicPlayer({ currentTrack, onTrackChange }: MusicPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { data: tracks = [] } = useTracks();
 
   useEffect(() => {
     if (currentTrack && audioRef.current) {
@@ -24,6 +27,29 @@ export function MusicPlayer({ currentTrack }: MusicPlayerProps) {
       audioRef.current.currentTime = 0;
     }
   }, [currentTrack]);
+
+  const getCurrentTrackIndex = () => {
+    if (!currentTrack || !tracks.length) return -1;
+    return tracks.findIndex(track => track.id === currentTrack.id);
+  };
+
+  const handlePrevTrack = () => {
+    const currentIndex = getCurrentTrackIndex();
+    if (currentIndex > 0 && onTrackChange) {
+      onTrackChange(tracks[currentIndex - 1]);
+    } else if (currentIndex === 0 && onTrackChange) {
+      onTrackChange(tracks[tracks.length - 1]);
+    }
+  };
+
+  const handleNextTrack = () => {
+    const currentIndex = getCurrentTrackIndex();
+    if (currentIndex < tracks.length - 1 && onTrackChange) {
+      onTrackChange(tracks[currentIndex + 1]);
+    } else if (currentIndex === tracks.length - 1 && onTrackChange) {
+      onTrackChange(tracks[0]);
+    }
+  };
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -70,6 +96,11 @@ export function MusicPlayer({ currentTrack }: MusicPlayerProps) {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  const handleEnded = () => {
+    setIsPlaying(false);
+    handleNextTrack();
+  };
+
   if (!currentTrack) return null;
 
   return (
@@ -92,7 +123,7 @@ export function MusicPlayer({ currentTrack }: MusicPlayerProps) {
           </div>
 
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={handlePrevTrack}>
               <SkipBack className="h-5 w-5" />
             </Button>
             <Button onClick={togglePlay} size="icon" className="hover-scale">
@@ -102,7 +133,7 @@ export function MusicPlayer({ currentTrack }: MusicPlayerProps) {
                 <Play className="h-5 w-5" />
               )}
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={handleNextTrack}>
               <SkipForward className="h-5 w-5" />
             </Button>
           </div>
@@ -136,7 +167,7 @@ export function MusicPlayer({ currentTrack }: MusicPlayerProps) {
           src={currentTrack.url}
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
-          onEnded={() => setIsPlaying(false)}
+          onEnded={handleEnded}
         />
       </div>
     </div>

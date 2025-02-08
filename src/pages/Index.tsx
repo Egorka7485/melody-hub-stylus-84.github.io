@@ -224,7 +224,7 @@ export default function Index() {
         ) : null}
       </main>
 
-      <MusicPlayer currentTrack={currentTrack} />
+      <MusicPlayer currentTrack={currentTrack} onTrackChange={handleTrackSelect} />
       <ThemeToggle />
     </div>
   );
