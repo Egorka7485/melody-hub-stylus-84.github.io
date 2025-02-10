@@ -1,7 +1,12 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://waiflwackfqzzktphkun.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhaWZsd2Fja2ZxenprdHBoa3VuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg5MjQ4ODgsImV4cCI6MjA1NDUwMDg4OH0.JdlN4ykKp4_fCwNiUVFvmCwiIMguuKi2I9hPGL7HkWk';
+// Эти значения нужно заменить на реальные из вашего проекта Supabase
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase URL or Anon Key');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
