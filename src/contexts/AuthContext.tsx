@@ -6,8 +6,9 @@ import { User } from "@supabase/supabase-js";
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string) => Promise<boolean>;
+  register: (email: string, password: string, isAdmin?: boolean) => Promise<boolean>;
   logout: () => Promise<void>;
 }
 
@@ -16,11 +17,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthenticated(!!session);
       setUser(session?.user ?? null);
+      // Check if user has admin role using user metadata
+      setIsAdmin(session?.user?.user_metadata?.role === 'admin');
     });
 
     const {
@@ -28,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(!!session);
       setUser(session?.user ?? null);
+      setIsAdmin(session?.user?.user_metadata?.role === 'admin');
     });
 
     return () => subscription.unsubscribe();
@@ -47,13 +52,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const register = async (email: string, password: string) => {
+  const register = async (email: string, password: string, isAdmin = false) => {
     try {
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin + '/admin/dashboard'
+          data: {
+            role: isAdmin ? 'admin' : 'user'
+          },
+          emailRedirectTo: window.location.origin + (isAdmin ? '/admin/dashboard' : '/profile')
         }
       });
       
@@ -84,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, isAdmin, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

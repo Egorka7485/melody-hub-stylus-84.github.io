@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
@@ -7,7 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 
-export default function AdminLogin() {
+export default function UserLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
@@ -21,9 +22,9 @@ export default function AdminLogin() {
     if (success) {
       toast({
         title: "Успешный вход",
-        description: "Добро пожаловать в систему",
+        description: "Добро пожаловать в Melody Hub",
       });
-      navigate("/admin/dashboard");
+      navigate("/profile");
     } else {
       toast({
         title: "Ошибка входа",
@@ -45,7 +46,7 @@ export default function AdminLogin() {
     }
 
     setIsRegistering(true);
-    const success = await register(email, password, true); // Register as admin
+    const success = await register(email, password, false);
     
     if (success) {
       toast({
