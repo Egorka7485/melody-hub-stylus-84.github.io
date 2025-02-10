@@ -11,6 +11,7 @@ import { ArrowLeft } from "lucide-react";
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
   const { login, register } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -35,7 +36,18 @@ export default function AdminLogin() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isRegistering) {
+      toast({
+        title: "Подождите",
+        description: "Повторите попытку через минуту",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsRegistering(true);
     const success = await register(email, password);
+    
     if (success) {
       toast({
         title: "Успешная регистрация",
@@ -44,10 +56,15 @@ export default function AdminLogin() {
     } else {
       toast({
         title: "Ошибка регистрации",
-        description: "Не удалось создать аккаунт",
+        description: "Не удалось создать аккаунт. Попробуйте позже.",
         variant: "destructive",
       });
     }
+
+    // Reset registration state after 1 minute
+    setTimeout(() => {
+      setIsRegistering(false);
+    }, 60000);
   };
 
   return (
@@ -123,8 +140,12 @@ export default function AdminLogin() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600">
-                  Зарегистрироваться
+                <Button 
+                  type="submit" 
+                  className="w-full bg-yellow-500 hover:bg-yellow-600"
+                  disabled={isRegistering}
+                >
+                  {isRegistering ? 'Подождите...' : 'Зарегистрироваться'}
                 </Button>
               </form>
             </TabsContent>

@@ -18,13 +18,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Проверяем текущую сессию при загрузке
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthenticated(!!session);
       setUser(session?.user ?? null);
     });
 
-    // Подписываемся на изменения состояния аутентификации
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -54,8 +52,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: window.location.origin + '/admin/dashboard'
+        }
       });
-      if (error) throw error;
+      
+      if (error) {
+        if (error.status === 429) {
+          console.error("Rate limit exceeded:", error);
+          return false;
+        }
+        if (error.status === 500) {
+          console.error("Server error:", error);
+          return false;
+        }
+        throw error;
+      }
       return true;
     } catch (error) {
       console.error("Error registering:", error);
