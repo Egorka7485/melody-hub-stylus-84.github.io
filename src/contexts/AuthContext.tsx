@@ -1,78 +1,31 @@
-
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { supabase } from "../lib/supabase";
-import { User } from "@supabase/supabase-js";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string) => Promise<boolean>;
-  logout: () => Promise<void>;
+  login: (username: string, password: string) => Promise<boolean>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    // Проверяем текущую сессию при загрузке
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAuthenticated(!!session);
-      setUser(session?.user ?? null);
-    });
-
-    // Подписываемся на изменения состояния аутентификации
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session);
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const login = async (email: string, password: string) => {
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
+  const login = async (username: string, password: string) => {
+    // For demo purposes, hardcoded credentials
+    if (username === "admin" && password === "admin123") {
+      setIsAuthenticated(true);
       return true;
-    } catch (error) {
-      console.error("Error logging in:", error);
-      return false;
     }
+    return false;
   };
 
-  const register = async (email: string, password: string) => {
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      if (error) throw error;
-      return true;
-    } catch (error) {
-      console.error("Error registering:", error);
-      return false;
-    }
-  };
-
-  const logout = async () => {
-    try {
-      await supabase.auth.signOut();
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
+  const logout = () => {
+    setIsAuthenticated(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
