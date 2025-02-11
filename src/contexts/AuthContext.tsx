@@ -9,8 +9,11 @@ interface AuthContextType {
   session: Session | null;
   profile: UserProfile | null;
   isLoading: boolean;
+  isAuthenticated: boolean;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
   uploadAvatar: (file: File) => Promise<string>;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,6 +64,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error("Error logging in:", error);
+      return false;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      navigate("/");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   const updateProfile = async (updates: Partial<UserProfile>) => {
     if (!session?.user.id) throw new Error("No user logged in");
 
@@ -94,7 +122,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ session, profile, isLoading, updateProfile, uploadAvatar }}>
+    <AuthContext.Provider value={{ 
+      session, 
+      profile, 
+      isLoading, 
+      isAuthenticated: !!session, 
+      updateProfile, 
+      uploadAvatar,
+      login,
+      logout
+    }}>
       {children}
     </AuthContext.Provider>
   );
