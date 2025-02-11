@@ -6,9 +6,8 @@ import { User } from "@supabase/supabase-js";
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  isAdmin: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, isAdmin?: boolean) => Promise<boolean>;
+  register: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
 }
 
@@ -17,22 +16,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    // Проверяем текущую сессию при загрузке
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthenticated(!!session);
       setUser(session?.user ?? null);
-      // Check if user has admin role using user metadata
-      setIsAdmin(session?.user?.user_metadata?.role === 'admin');
     });
 
+    // Подписываемся на изменения состояния аутентификации
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(!!session);
       setUser(session?.user ?? null);
-      setIsAdmin(session?.user?.user_metadata?.role === 'admin');
     });
 
     return () => subscription.unsubscribe();
@@ -52,30 +49,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const register = async (email: string, password: string, isAdmin = false) => {
+  const register = async (email: string, password: string) => {
     try {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            role: isAdmin ? 'admin' : 'user'
-          },
-          emailRedirectTo: window.location.origin + (isAdmin ? '/admin/dashboard' : '/profile')
-        }
       });
-      
-      if (error) {
-        if (error.status === 429) {
-          console.error("Rate limit exceeded:", error);
-          return false;
-        }
-        if (error.status === 500) {
-          console.error("Server error:", error);
-          return false;
-        }
-        throw error;
-      }
+      if (error) throw error;
       return true;
     } catch (error) {
       console.error("Error registering:", error);
@@ -92,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, isAdmin, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
