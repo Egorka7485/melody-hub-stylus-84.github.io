@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -18,6 +19,37 @@ export default function Auth() {
   const [lastName, setLastName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [resetEmail, setResetEmail] = useState("");
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string>("");
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setAvatar(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const uploadAvatar = async (userId: string): Promise<string | null> => {
+    if (!avatar) return null;
+
+    const fileExt = avatar.name.split('.').pop();
+    const filePath = `${userId}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, avatar, { upsert: true });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +76,7 @@ export default function Auth() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data: { user }, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -55,12 +87,29 @@ export default function Auth() {
           },
         },
       });
+
       if (signUpError) throw signUpError;
+
+      if (user && avatar) {
+        try {
+          const avatarUrl = await uploadAvatar(user.id);
+          const { error: updateError } = await supabase
+            .from('profiles')
+            .update({ avatar_url: avatarUrl })
+            .eq('id', user.id);
+
+          if (updateError) throw updateError;
+        } catch (error: any) {
+          console.error('Error uploading avatar:', error);
+        }
+      }
 
       toast({
         title: "Успешно!",
         description: "Пожалуйста, подтвердите свой email для завершения регистрации.",
       });
+      
+      navigate("/");
     } catch (error: any) {
       toast({
         title: "Ошибка",
@@ -132,6 +181,28 @@ export default function Auth() {
 
         <TabsContent value="register">
           <form onSubmit={handleSignUp} className="space-y-4">
+            <div className="flex justify-center mb-4">
+              <div className="space-y-2 text-center">
+                <Avatar className="w-24 h-24 mx-auto">
+                  <AvatarImage src={avatarPreview} />
+                  <AvatarFallback>
+                    {firstName && lastName ? `${firstName[0]}${lastName[0]}` : 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                    className="hidden"
+                    id="avatar-upload"
+                  />
+                  <Label htmlFor="avatar-upload" className="cursor-pointer text-sm text-muted-foreground hover:text-primary">
+                    Загрузить аватар
+                  </Label>
+                </div>
+              </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="firstName">Имя</Label>
               <Input
