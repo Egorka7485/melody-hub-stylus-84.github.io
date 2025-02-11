@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { WaveSection } from "../components/WaveSection";
 import { ThemeToggle } from "../components/ThemeToggle";
-import { useTracks, useUpdatePlayCount } from "../hooks/useTracks";
+import { useTracks, useNewTracks, useUpdatePlayCount } from "../hooks/useTracks";
 import { Track } from "../types/track";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -29,6 +29,7 @@ export default function Index() {
   const { toast } = useToast();
   
   const { data: tracks = [], isLoading, error } = useTracks();
+  const { data: newTracks = [], isLoading: isLoadingNew } = useNewTracks();
   const updatePlayCount = useUpdatePlayCount();
 
   const handleTrackSelect = async (track: Track) => {
@@ -190,6 +191,25 @@ export default function Index() {
               </>
             )}
           </div>
+        ) : selectedCategory === "new" ? (
+          <div className="bg-card rounded-lg shadow-sm p-6">
+            <h2 className="text-2xl font-bold mb-6 text-foreground">Новые релизы</h2>
+            {isLoadingNew ? (
+              <p className="text-muted-foreground">Загрузка треков...</p>
+            ) : error ? (
+              <p className="text-red-500">Ошибка при загрузке треков</p>
+            ) : newTracks.length === 0 ? (
+              <p className="text-muted-foreground">Нет новых релизов за последнюю неделю</p>
+            ) : (
+              <>
+                <p className="text-muted-foreground mb-4">Треки, загруженные за последнюю неделю</p>
+                <TrackList
+                  tracks={newTracks}
+                  onTrackSelect={handleTrackSelect}
+                />
+              </>
+            )}
+          </div>
         ) : showMainMenu ? (
           <>
             <WaveSection onPlay={handleWavePlay} />
@@ -224,7 +244,7 @@ export default function Index() {
         ) : null}
       </main>
 
-      <MusicPlayer currentTrack={currentTrack} />
+      <MusicPlayer currentTrack={currentTrack} onTrackChange={handleTrackSelect} />
       <ThemeToggle />
     </div>
   );

@@ -18,6 +18,26 @@ export const useTracks = () => {
   });
 };
 
+export const useNewTracks = () => {
+  return useQuery({
+    queryKey: ['new-tracks'],
+    queryFn: async () => {
+      // Получаем дату неделю назад
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      
+      const { data, error } = await supabase
+        .from('tracks')
+        .select('*')
+        .gte('created_at', weekAgo.toISOString())
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as Track[];
+    }
+  });
+};
+
 export const useUpdatePlayCount = () => {
   const queryClient = useQueryClient();
   
