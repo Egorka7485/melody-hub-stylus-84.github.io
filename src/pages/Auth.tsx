@@ -60,6 +60,11 @@ export default function Auth() {
         password,
       });
       if (error) throw error;
+      
+      toast({
+        title: "Успешно!",
+        description: "Вы успешно вошли в систему",
+      });
       navigate("/");
     } catch (error: any) {
       toast({
@@ -155,14 +160,43 @@ export default function Auth() {
       
       <div className="text-center mb-8 pt-12">
         <h1 className="text-2xl font-bold">Melody Hub</h1>
-        <p className="text-muted-foreground">Создайте аккаунт</p>
+        <p className="text-muted-foreground">Войдите или создайте аккаунт</p>
       </div>
 
-      <Tabs defaultValue="register" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+      <Tabs defaultValue="login" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="login">Вход</TabsTrigger>
           <TabsTrigger value="register">Регистрация</TabsTrigger>
           <TabsTrigger value="reset">Сброс пароля</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="login">
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="loginEmail">Email</Label>
+              <Input
+                id="loginEmail"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="loginPassword">Пароль</Label>
+              <Input
+                id="loginPassword"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Загрузка..." : "Войти"}
+            </Button>
+          </form>
+        </TabsContent>
 
         <TabsContent value="register">
           <form onSubmit={handleSignUp} className="space-y-4">
