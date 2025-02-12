@@ -37,7 +37,7 @@ export default function AdminLogin() {
       <div className="bg-white p-8 rounded-lg w-full max-w-md space-y-6 shadow-lg relative">
         <Button 
           variant="ghost" 
-          className="absolute left-4 top-4 text-black bg-white hover:bg-white/90"
+          className="absolute left-4 top-4"
           onClick={() => navigate("/")}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
