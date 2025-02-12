@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ArrowLeft } from "lucide-react";
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -143,7 +144,21 @@ export default function Auth() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-md">
+    <div className="container mx-auto px-4 py-8 max-w-md relative">
+      <Button 
+        variant="ghost" 
+        className="absolute left-4 top-4"
+        onClick={() => navigate("/")}
+      >
+        <ArrowLeft className="h-4 w-4 mr-2" />
+        Назад
+      </Button>
+      
+      <div className="text-center mb-8 pt-12">
+        <h1 className="text-2xl font-bold">Melody Hub</h1>
+        <p className="text-muted-foreground">Войдите или создайте аккаунт</p>
+      </div>
+
       <Tabs defaultValue="login" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="login">Вход</TabsTrigger>
