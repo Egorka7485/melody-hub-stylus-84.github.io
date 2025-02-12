@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -61,6 +60,11 @@ export default function Auth() {
         password,
       });
       if (error) throw error;
+      
+      toast({
+        title: "Успешно!",
+        description: "Вы успешно вошли в систему",
+      });
       navigate("/");
     } catch (error: any) {
       toast({
@@ -169,9 +173,9 @@ export default function Auth() {
         <TabsContent value="login">
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="loginEmail">Email</Label>
               <Input
-                id="email"
+                id="loginEmail"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -179,9 +183,9 @@ export default function Auth() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Пароль</Label>
+              <Label htmlFor="loginPassword">Пароль</Label>
               <Input
-                id="password"
+                id="loginPassword"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
