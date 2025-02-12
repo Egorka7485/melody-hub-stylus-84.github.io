@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -156,43 +155,14 @@ export default function Auth() {
       
       <div className="text-center mb-8 pt-12">
         <h1 className="text-2xl font-bold">Melody Hub</h1>
-        <p className="text-muted-foreground">Войдите или создайте аккаунт</p>
+        <p className="text-muted-foreground">Создайте аккаунт</p>
       </div>
 
-      <Tabs defaultValue="login" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="login">Вход</TabsTrigger>
+      <Tabs defaultValue="register" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="register">Регистрация</TabsTrigger>
           <TabsTrigger value="reset">Сброс пароля</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="login">
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Пароль</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Загрузка..." : "Войти"}
-            </Button>
-          </form>
-        </TabsContent>
 
         <TabsContent value="register">
           <form onSubmit={handleSignUp} className="space-y-4">
